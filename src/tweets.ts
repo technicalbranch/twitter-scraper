@@ -198,18 +198,24 @@ export function getTweets(
   user: string,
   maxTweets: number,
   auth: TwitterAuth,
+  cursor?: string,
 ): AsyncGenerator<Tweet, string | undefined> {
-  return getTweetTimeline(user, maxTweets, async (q, mt, c) => {
-    const userIdRes = await getUserIdByScreenName(q, auth);
+  return getTweetTimeline(
+    user,
+    maxTweets,
+    async (q, mt, c) => {
+      const userIdRes = await getUserIdByScreenName(q, auth);
 
-    if (!userIdRes.success) {
-      throw userIdRes.err;
-    }
+      if (!userIdRes.success) {
+        throw userIdRes.err;
+      }
 
-    const { value: userId } = userIdRes;
+      const { value: userId } = userIdRes;
 
-    return fetchTweets(userId, mt, c, auth);
-  });
+      return fetchTweets(userId, mt, c, auth);
+    },
+    cursor,
+  );
 }
 
 export function getTweetsByUserId(

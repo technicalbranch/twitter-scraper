@@ -60,9 +60,10 @@ export async function* getTweetTimeline(
   query: string,
   maxTweets: number,
   fetchFunc: FetchTweets,
+  customCursor?: string,
 ): AsyncGenerator<Tweet, string | undefined> {
   let nTweets = 0;
-  let cursor: string | undefined = undefined;
+  let cursor: string | undefined = customCursor;
   while (nTweets < maxTweets) {
     const batch: FetchTweetsResponse = await fetchFunc(
       query,

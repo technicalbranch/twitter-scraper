@@ -247,8 +247,12 @@ export class Scraper {
    * @param maxTweets The maximum number of tweets to return. Defaults to `200`.
    * @returns An {@link AsyncGenerator} of tweets from the provided user.
    */
-  public getTweets(user: string, maxTweets = 200): AsyncGenerator<Tweet, string | void> {
-    return getTweets(user, maxTweets, this.auth);
+  public getTweets(
+    user: string,
+    maxTweets = 200,
+    cursor?: string,
+  ): AsyncGenerator<Tweet, string | undefined> {
+    return getTweets(user, maxTweets, this.auth, cursor);
   }
 
   /**
