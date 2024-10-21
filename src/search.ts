@@ -101,15 +101,21 @@ async function getSearchTimeline(
   };
 
   const features = addApiFeatures({
+    rweb_tipjar_consumption_enabled: true,
+    communities_web_enable_tweet_community_results_fetch: true,
+    c9s_tweet_anatomy_moderator_badge_enabled: true,
+    articles_preview_enabled: true,
     longform_notetweets_inline_media_enabled: true,
     responsive_web_enhance_cards_enabled: false,
     responsive_web_media_download_video_enabled: false,
-    responsive_web_twitter_article_tweet_consumption_enabled: false,
+    responsive_web_twitter_article_tweet_consumption_enabled: true,
     tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled:
       true,
     interactive_text_enabled: false,
     responsive_web_text_conversations_enabled: false,
     vibe_api_enabled: false,
+    creator_subscriptions_quote_tweet_preview_enabled: false,
+    rweb_video_timestamps_enabled: true,
   });
 
   const fieldToggles: Record<string, any> = {
@@ -143,7 +149,7 @@ async function getSearchTimeline(
   params.set('variables', stringify(variables));
 
   const res = await requestApi<SearchTimeline>(
-    `https://api.twitter.com/graphql/gkjsKepM6gl_HmFWoWKfgg/SearchTimeline?${params.toString()}`,
+    `https://x.com/i/api/graphql/MJpyQGqgklrVl_0X9gNy3A/SearchTimeline?${params.toString()}`,
     auth,
   );
 
