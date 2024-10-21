@@ -758,9 +758,9 @@ async function* getUserTimeline(query, maxProfiles, fetchFunc) {
     if (!next) break;
   }
 }
-async function* getTweetTimeline(query, maxTweets, fetchFunc) {
+async function* getTweetTimeline(query, maxTweets, fetchFunc, customCursor) {
   let nTweets = 0;
-  let cursor = void 0;
+  let cursor = customCursor;
   while (nTweets < maxTweets) {
     const batch = await fetchFunc(
       query,
@@ -1653,15 +1653,20 @@ async function fetchListTweets(listId, maxTweets, cursor, auth) {
   }
   return parseListTimelineTweets(res.value);
 }
-function getTweets(user, maxTweets, auth) {
-  return getTweetTimeline(user, maxTweets, async (q, mt, c) => {
-    const userIdRes = await getUserIdByScreenName(q, auth);
-    if (!userIdRes.success) {
-      throw userIdRes.err;
-    }
-    const { value: userId } = userIdRes;
-    return fetchTweets(userId, mt, c, auth);
-  });
+function getTweets(user, maxTweets, auth, cursor) {
+  return getTweetTimeline(
+    user,
+    maxTweets,
+    async (q, mt, c) => {
+      const userIdRes = await getUserIdByScreenName(q, auth);
+      if (!userIdRes.success) {
+        throw userIdRes.err;
+      }
+      const { value: userId } = userIdRes;
+      return fetchTweets(userId, mt, c, auth);
+    },
+    cursor
+  );
 }
 function getTweetsByUserId(userId, maxTweets, auth) {
   return getTweetTimeline(userId, maxTweets, (q, mt, c) => {
@@ -1920,8 +1925,8 @@ class Scraper {
    * @param maxTweets The maximum number of tweets to return. Defaults to `200`.
    * @returns An {@link AsyncGenerator} of tweets from the provided user.
    */
-  getTweets(user, maxTweets = 200) {
-    return getTweets(user, maxTweets, this.auth);
+  getTweets(user, maxTweets = 200, cursor) {
+    return getTweets(user, maxTweets, this.auth, cursor);
   }
   /**
    * Fetches liked tweets from a Twitter user. Requires authentication.
