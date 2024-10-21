@@ -402,7 +402,7 @@ declare class Scraper {
      * @param maxTweets The maximum number of tweets to return. Defaults to `200`.
      * @returns An {@link AsyncGenerator} of tweets from the provided user.
      */
-    getTweets(user: string, maxTweets?: number): AsyncGenerator<Tweet, string | void>;
+    getTweets(user: string, maxTweets?: number): AsyncGenerator<Tweet, string | undefined>;
     /**
      * Fetches liked tweets from a Twitter user. Requires authentication.
      * @param user The user whose likes should be returned.
