@@ -112,6 +112,9 @@ export async function fetchTweets(
   }
 
   const userTweetsRequest = apiRequestFactory.createUserTweetsRequest();
+  if (!userTweetsRequest.variables) {
+    userTweetsRequest.variables = {};
+  }
   userTweetsRequest.variables.userId = userId;
   userTweetsRequest.variables.count = maxTweets;
   userTweetsRequest.variables.includePromotedContent = false; // true on the website
@@ -175,6 +178,9 @@ export async function fetchListTweets(
   }
 
   const listTweetsRequest = apiRequestFactory.createListTweetsRequest();
+  if (!listTweetsRequest.variables) {
+    listTweetsRequest.variables = {};
+  }
   listTweetsRequest.variables.listId = listId;
   listTweetsRequest.variables.count = maxTweets;
 
@@ -271,6 +277,9 @@ export async function fetchLikedTweets(
   }
 
   const userTweetsRequest = apiRequestFactory.createUserLikedTweetsRequest();
+  if (!userTweetsRequest.variables) {
+    userTweetsRequest.variables = {};
+  }
   userTweetsRequest.variables.userId = userId;
   userTweetsRequest.variables.count = maxTweets;
   userTweetsRequest.variables.includePromotedContent = false; // true on the website
