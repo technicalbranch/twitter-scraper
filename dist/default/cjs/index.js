@@ -91,33 +91,22 @@ async function requestApi(url, auth, method = "GET", platform = new Platform()) 
   await auth.installTo(headers, url);
   await platform.randomizeCiphers();
   let res;
-  do {
-    try {
-      res = await auth.fetch(url, {
-        method,
-        headers,
-        credentials: "include"
-      });
-    } catch (err) {
-      if (!(err instanceof Error)) {
-        throw err;
-      }
-      return {
-        success: false,
-        err: new Error("Failed to perform request.")
-      };
+  try {
+    res = await auth.fetch(url, {
+      method,
+      headers,
+      credentials: "include"
+    });
+  } catch (err) {
+    if (!(err instanceof Error)) {
+      throw err;
     }
-    await updateCookieJar(auth.cookieJar(), res.headers);
-    if (res.status === 429) {
-      const xRateLimitRemaining = res.headers.get("x-rate-limit-remaining");
-      const xRateLimitReset = res.headers.get("x-rate-limit-reset");
-      if (xRateLimitRemaining == "0" && xRateLimitReset) {
-        const currentTime = (/* @__PURE__ */ new Date()).valueOf() / 1e3;
-        const timeDeltaMs = 1e3 * (parseInt(xRateLimitReset) - currentTime);
-        await new Promise((resolve) => setTimeout(resolve, timeDeltaMs));
-      }
-    }
-  } while (res.status === 429);
+    return {
+      success: false,
+      err: new Error("Failed to perform request.")
+    };
+  }
+  await updateCookieJar(auth.cookieJar(), res.headers);
   if (!res.ok) {
     return {
       success: false,
